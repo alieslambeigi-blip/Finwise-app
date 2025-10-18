@@ -16,3 +16,4 @@ export default async function handler(req, res) {
   const labels = result.labelAnnotations.map((label) => label.description);
   res.status(200).json({ labels });
 }
+Create vision.js for image recognition
