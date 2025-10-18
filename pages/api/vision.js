@@ -1,7 +1,10 @@
 import vision from "@google-cloud/vision";
 
 const client = new vision.ImageAnnotatorClient({
-  keyFilename: "google-vision-key.json", // مطمئن شو این فایل در ریشه پروژه هست
+  credentials: {
+    client_email: process.env.GOOGLE_CLIENT_EMAIL,
+    private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+  },
 });
 
 export default async function handler(req, res) {
