@@ -61,6 +61,16 @@ export default function SmartBuy() {
           <img src={image} alt="کالا" style={{ width: "200px" }} />
           <button onClick={analyzePurchase} style={{ marginTop: "1rem" }}>
             تحلیل و پیشنهاد خرید
+              {labels.length > 0 && (
+  <div style={{ marginTop: "1rem" }}>
+    <h3>🔍 انتخاب کالا:</h3>
+    <select onChange={(e) => setSelectedLabel(e.target.value)}>
+      {labels.map((label, index) => (
+        <option key={index} value={label}>{label}</option>
+      ))}
+    </select>
+  </div>
+)}
           </button>
         </div>
       )}
