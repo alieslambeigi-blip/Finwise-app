@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+const [selectedLabel, setSelectedLabel] = useState("");
 export default function SmartBuy() {
   const [image, setImage] = useState(null);
   const [result, setResult] = useState("");
