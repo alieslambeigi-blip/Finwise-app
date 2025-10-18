@@ -8,6 +8,7 @@ export default function SmartBuy() {
   const [result, setResult] = useState("");
   const [userBudget, setUserBudget] = useState(10000000); // بودجه فرضی
 
+  // آپلود تصویر و تبدیل به base64
   const handleUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -18,6 +19,7 @@ export default function SmartBuy() {
       setBase64(base64String);
       setImage(reader.result);
 
+      // ارسال به Vision API
       const response = await fetch("/api/vision", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -30,6 +32,7 @@ export default function SmartBuy() {
     reader.readAsDataURL(file);
   };
 
+  // تحلیل و پیشنهاد خرید
   const analyzePurchase = async () => {
     const query = selectedLabel || labels[0];
     if (!query) {
@@ -37,6 +40,7 @@ export default function SmartBuy() {
       return;
     }
 
+    // ارسال به API قیمت
     const response = await fetch("/api/price", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -51,20 +55,21 @@ export default function SmartBuy() {
       return;
     }
 
+    // تحلیل بودجه و پیشنهاد
     let suggestion = "";
     if (price <= userBudget) {
-      suggestion = "✅ خرید نقدی پیشنهاد:";
+      suggestion = "✅ خرید نقدی پیشنهاد می‌شود.";
     } else if (price <= userBudget * 2) {
-      suggestion = "💳 خرید اقساطی BNPL پیشنهاد:";
+      suggestion = "💳 خرید اقساطی BNPL پیشنهاد می‌شود.";
     } else {
-      suggestion = "📉 کاهش قیمت یا محاسبه اقساط پیشنهاد:";
+      suggestion = "📉 پیشنهاد: کالای مشابه ارزان‌تر یا دریافت وام.";
     }
 
-    setResult(`📦 کالا: ${query}\n💰 قیمت: ${price.toLocaleString()} تومان\n🛍️ پیشنهاد: ${suggestion}`);
+    setResult(`📦 کالا: ${query}\n💰 قیمت: ${price.toLocaleString()} تومان\n🛍️ ${suggestion}`);
   };
 
   return (
-    <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
+    <div style={{ padding: "2rem", fontFamily: "sans-serif", direction: "rtl" }}>
       <h1>🛍️ خرید هوشمند Finwise</h1>
 
       <input type="file" accept="image/*" onChange={handleUpload} />
