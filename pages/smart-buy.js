@@ -35,7 +35,7 @@ export default function SmartBuy() {
   };
 
   const analyzePurchase = async () => {
-    const price = await fetchPrice();
+    const price = await fetchPrice();body: JSON.stringify({ query: selectedLabel || labels[0] }),
     const userBudget = 5000000;
 
     let suggestion = "";
