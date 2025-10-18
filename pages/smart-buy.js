@@ -3,28 +3,52 @@ import { useState } from "react";
 export default function SmartBuy() {
   const [image, setImage] = useState(null);
   const [result, setResult] = useState("");
+  const [labels, setLabels] = useState([]);
 
-  const handleUpload = (e) => {
+  const handleUpload = async (e) => {
     const file = e.target.files[0];
-    setImage(URL.createObjectURL(file));
+    const reader = new FileReader();
+
+    reader.onloadend = async () => {
+      const base64 = reader.result.split(",")[1];
+      const res = await fetch("/api/vision", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: base64 }),
+      });
+      const data = await res.json();
+      setLabels(data.labels);
+      setImage(reader.result);
+    };
+
+    reader.readAsDataURL(file);
   };
 
-  const analyzePurchase = () => {
-    const mockItem = "گوشی موبایل";
-    const mockPrice = 12000000;
+  const fetchPrice = async () => {
+    const res = await fetch("/api/price", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: labels[0] }),
+    });
+    const data = await res.json();
+    return data.minPrice || 0;
+  };
+
+  const analyzePurchase = async () => {
+    const price = await fetchPrice();
     const userBudget = 5000000;
 
     let suggestion = "";
 
-    if (mockPrice <= userBudget) {
+    if (price <= userBudget) {
       suggestion = "✅ پیشنهاد: خرید نقدی";
-    } else if (mockPrice <= userBudget * 2) {
+    } else if (price <= userBudget * 2) {
       suggestion = "💳 پیشنهاد: خرید اقساطی BNPL";
     } else {
       suggestion = "📦 پیشنهاد: کالای مشابه ارزان‌تر یا دریافت وام";
     }
 
-    setResult(`کالا: ${mockItem}\nقیمت: ${mockPrice.toLocaleString()} تومان\n${suggestion}`);
+    setResult(`کالا: ${labels[0] || "نامشخص"}\nقیمت: ${price.toLocaleString()} تومان\n${suggestion}`);
   };
 
   return (
@@ -46,4 +70,4 @@ export default function SmartBuy() {
       )}
     </div>
   );
-}
+        }Update smart-buy.js with new logic
