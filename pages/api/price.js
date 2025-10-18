@@ -20,4 +20,4 @@ export default async function handler(req, res) {
 
   const minPrice = Math.min(...prices);
   res.status(200).json({ minPrice });
-}
+}Create price.js for price scraping
