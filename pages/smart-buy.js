@@ -39,7 +39,10 @@ export default function SmartBuy() {
     const userBudget = 5000000;
 
     let suggestion = "";
-
+if (price === 0) {
+  setResult("❌ قیمت کالا یافت نشد. لطفاً نام دقیق‌تری انتخاب کنید.");
+  return;
+}
     if (price <= userBudget) {
       suggestion = "✅ پیشنهاد: خرید نقدی";
     } else if (price <= userBudget * 2) {
