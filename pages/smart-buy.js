@@ -44,15 +44,15 @@ export default function SmartBuy() {
   };
 
   return (
-    <div style={{ padding: "2rem", fontFamily: "sans-serif" }}>
-      <h2>خرید هوشمند Finwise</h2>
+    <div style={{ padding: "2rem", fontFamily: "sans-serif", textAlign: "center" }}>
+      <h2>🛍️ خرید هوشمند Finwise</h2>
       <input type="file" accept="image/*" onChange={handleFileChange} />
       {loading && <p>در حال تحلیل تصویر و دریافت قیمت...</p>}
-      {query && <p>نام کالا: {query}</p>}
+      {query && <p>🔎 نام کالا: {query}</p>}
       {minPrice !== null && (
-        <p>کمترین قیمت: {minPrice.toLocaleString()} تومان</p>
+        <p>💰 کمترین قیمت: {minPrice.toLocaleString()} تومان</p>
       )}
-      {message && <p>پیشنهاد: {message}</p>}
+      {message && <p>📌 پیشنهاد: {message}</p>}
     </div>
   );
       }
