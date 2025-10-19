@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 export default function SmartBuy() {
-  const [image, setImage] = useState(null);
   const [query, setQuery] = useState("");
   const [minPrice, setMinPrice] = useState(null);
   const [message, setMessage] = useState("");
@@ -16,27 +15,31 @@ export default function SmartBuy() {
       const base64Image = reader.result.split(",")[1];
       setLoading(true);
 
-      // مرحله ۱: ارسال تصویر به Vision API
-      const visionRes = await fetch("/api/vision", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image: base64Image }),
-      });
+      try {
+        const visionRes = await fetch("/api/vision", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ image: base64Image }),
+        });
 
-      const visionData = await visionRes.json();
-      const queryFromVision = visionData.query || "کالا";
-      setQuery(queryFromVision);
+        const visionData = await visionRes.json();
+        const queryFromVision = visionData.query || "کالا";
+        setQuery(queryFromVision);
 
-      // مرحله ۲: ارسال query به Price API
-      const priceRes = await fetch("/api/price", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: queryFromVision }),
-      });
+        const priceRes = await fetch("/api/price", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: queryFromVision }),
+        });
 
-      const priceData = await priceRes.json();
-      setMinPrice(priceData.minPrice);
-      setMessage(priceData.message || "");
+        const priceData = await priceRes.json();
+        setMinPrice(priceData.minPrice);
+        setMessage(priceData.message || "");
+      } catch (err) {
+        console.error("خطا در دریافت اطلاعات:", err);
+        setMessage("خطا در دریافت اطلاعات");
+      }
+
       setLoading(false);
     };
 
